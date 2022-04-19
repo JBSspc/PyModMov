@@ -7,14 +7,17 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 class LorenzAttractor:
-    def Lorenz(self,t, X, sigma, beta, rho):
-        'Lorenz eq'
+
+    # Lorenz attractor equations
+    def Lorenz(self,t, X, sigma, beta, rho): 
         x,y,z = X
-        dotX = sigma * (y - x)
-        dotY = x * (rho - z) - y
-        dotZ = x*y - beta*z
+        dotX = sigma * (y - x)      # x' = sigma*(y-x)
+        dotY = x * (rho - z) - y    # y' = x*(rho-z)-y
+        dotZ = x*y - beta*z         # z' = x*y-beta*z
         return dotX, dotY, dotZ
-    def OdeLorenz(self,x0,y0,z0, tmax,n, sigma, beta, rho,WIDTH, HEIGHT, DPI):
+
+    # using scipy.integrate (solve_ivp) 
+    def OdeLorenz(self,x0,y0,z0, tmax,n, sigma, beta, rho,WIDTH, HEIGHT, DPI): 
         nSol = solve_ivp(self.Lorenz, (0,tmax), (x0,y0,z0), args = (sigma, beta, rho), dense_output=True)
         t = np.linspace(0, tmax,n)
         x,y,z = nSol.sol(t)
