@@ -127,7 +127,7 @@ def main():
     tmax, n = 200, 10000
     x0, y0, z0 = 0.1,0.1,0.1
     sigma, beta, rho = 10, 8/3, 28
-    WIDTH, HEIGHT, DPI = 1000, 750, 100
+    WIDTH, HEIGHT, DPI = 1000, 750, 360
       
     la = LorenzAttractor()
     sODE = time.time()
@@ -142,9 +142,9 @@ def main():
     la.RK4(N,h, sigma, beta,rho)
     eRK4 = time.time()
 
-    elapsedODE = sODE - eODE
-    elapsedE = sE - eE
-    elapsedRK4 = sRK4 - eRK4
+    elapsedODE = eODE - sODE 
+    elapsedE = eE - sE 
+    elapsedRK4 = eRK4 - sRK4
   
     print("Elapsed ODE: ", elapsedODE, " s")
     print("Elapsed EULER: ", elapsedE, " s")
