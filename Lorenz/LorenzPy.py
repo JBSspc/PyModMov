@@ -5,6 +5,7 @@ import numpy as np
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+import time
 #from sympy.abc import x,y,z
 
 
@@ -129,11 +130,25 @@ def main():
     WIDTH, HEIGHT, DPI = 1000, 750, 100
       
     la = LorenzAttractor()
-
+    sODE = time.time()
     la.OdeLorenz(x0,y0,z0, tmax,n, sigma, beta, rho,WIDTH, HEIGHT, DPI)
+    eODE = time.time()
+
+    sE = time.time()
     la.Euler(h,N,sigma, beta, rho)
+    eE = time.time()
+
+    sRK4 = time.time()
     la.RK4(N,h, sigma, beta,rho)
-    
+    eRK4 = time.time()
+
+    elapsedODE = sODE - eODE
+    elapsedE = sE - eE
+    elapsedRK4 = sRK4 - eRK4
+  
+    print("Elapsed ODE: ", elapsedODE, " s")
+    print("Elapsed EULER: ", elapsedE, " s")
+    print("Elapsed RK4: ", elapsedRK4, " s")
 
 if __name__ == "__main__":
     main()
