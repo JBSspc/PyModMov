@@ -31,19 +31,19 @@ class LorenzAttractor:
         ax.set_facecolor('k')
         fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
 
-        # Make the line multi-coloured by plotting it in segments of length s which
-        # change in colour across the whole time series.
+        # To make a multi-coloured line by plotting in segments of length s which
+        # change in colour across the whole time series. == color has no math value, just aesthetic
         s = 10
         cmap = plt.cm.cool
         for i in range(0,n-s,s):
             ax.plot(x[i:i+s+1], y[i:i+s+1], z[i:i+s+1], color=cmap(i/n), alpha=0.4)
 
-        # Remove all the axis clutter, leaving just the curve.
+        # Remove all axis, just graph
         ax.set_axis_off()
         plt.savefig('myLorenz.png', dpi=DPI)
         plt.show()      
         
-    # Runge-Kutta 4th order =============================================================================================================
+    # Euler Method ======================================================================================================================
 
     def L4rk(self,x,y,z, sigma, beta, rho):
         dotX = sigma * (y - x)      # x' = sigma*(y-x)
@@ -76,7 +76,7 @@ class LorenzAttractor:
         plt.show()
         # 'https://www.youtube.com/watch?v=kAvJRF9BeiA'
 
-    # Euler Method ======================================================================================================================
+    # Runge-Kutta 4th order =============================================================================================================
             
     def RK4(self, N,h, sigma, beta,rho):
         xrk4 = np.empty((N+1,)) # prealojamos
