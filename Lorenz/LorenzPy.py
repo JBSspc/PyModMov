@@ -22,11 +22,11 @@ class LorenzAttractor:
     # Using scipy.integrate (solve_ivp) ==================================================================================================
 
     def OdeLorenz(self,x0,y0,z0, tmax,n, sigma, beta, rho,WIDTH, HEIGHT, DPI): 
-        sODE = time.time()
+        
         nSol = solve_ivp(self.Lorenz, (0,tmax), (x0,y0,z0), args = (sigma, beta, rho), dense_output=True)
         t = np.linspace(0, tmax,n)
         x,y,z = nSol.sol(t)
-        eODE = time.time()
+        
         # Plot the Lorenz attractor using a Matplotlib 3D projection.
         fig = plt.figure(facecolor='k', figsize=(WIDTH/DPI, HEIGHT/DPI))
         ax = fig.gca(projection='3d')
@@ -41,8 +41,8 @@ class LorenzAttractor:
             ax.plot(x[i:i+s+1], y[i:i+s+1], z[i:i+s+1], color=cmap(i/n), alpha=0.4)
 
         # Remove all the axis clutter, leaving just the curve.
-        elapsedODE = eODE - sODE 
-        print("Elapsed ODE: ", elapsedODE, " s")
+        
+        
         ax.set_axis_off()
         plt.savefig('myLorenz.png', dpi=DPI)
         plt.show()      
@@ -62,7 +62,7 @@ class LorenzAttractor:
 
         xe[0], ye[0], ze[0] = (0.1,0.1,0.1)
 
-        sE = time.time()
+        
         for i in range(N):
           x_dot, y_dot, z_dot = self.L4rk(xe[i], ye[i], ze[i],sigma, beta, rho)
           xe[i+1] = xe[i] + (x_dot*h)
@@ -135,11 +135,11 @@ def main():
     WIDTH, HEIGHT, DPI = 1000, 750, 360
       
     la = LorenzAttractor()
-    #sODE = time.time()
+    sODE = time.time()
     la.OdeLorenz(x0,y0,z0, tmax,n, sigma, beta, rho,WIDTH, HEIGHT, DPI)
-    #eODE = time.time()
+    eODE = time.time()
 
-    #sE = time.time()
+    sE = time.time()
     la.Euler(h,N,sigma, beta, rho)
     eE = time.time()
 
@@ -147,11 +147,11 @@ def main():
     la.RK4(N,h, sigma, beta,rho)
     eRK4 = time.time()
 
-    #elapsedODE = eODE - sODE 
+    elapsedODE = eODE - sODE 
     elapsedE = eE - sE 
     elapsedRK4 = eRK4 - sRK4
   
-    # print("Elapsed ODE: ", elapsedODE, " s")
+    print("Elapsed ODE: ", elapsedODE, " s")
     print("Elapsed EULER: ", elapsedE, " s")
     print("Elapsed RK4: ", elapsedRK4, " s")
 
