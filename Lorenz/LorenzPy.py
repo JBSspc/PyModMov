@@ -22,32 +22,32 @@ class LorenzAttractor:
     # Using scipy.integrate (solve_ivp) ==================================================================================================
 
     def OdeLorenz(self,x0,y0,z0, tmax,n, sigma, beta, rho,WIDTH, HEIGHT, DPI): 
-        
+        sODE = time.time()
         nSol = solve_ivp(self.Lorenz, (0,tmax), (x0,y0,z0), args = (sigma, beta, rho), dense_output=True)
         t = np.linspace(0, tmax,n)
         x,y,z = nSol.sol(t)
-        
+        eODE = time.time()
         # Plot the Lorenz attractor using a Matplotlib 3D projection.
         fig = plt.figure(facecolor='k', figsize=(WIDTH/DPI, HEIGHT/DPI))
         ax = fig.gca(projection='3d')
         ax.set_facecolor('k')
         fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
 
-        # Make the line multi-coloured by plotting it in segments of length s which
-        # change in colour across the whole time series.
+        # To make a multi-coloured line by plotting in segments of length s which
+        # change in colour across the whole time series. == color has no math value, just aesthetic
         s = 10
         cmap = plt.cm.cool
         for i in range(0,n-s,s):
             ax.plot(x[i:i+s+1], y[i:i+s+1], z[i:i+s+1], color=cmap(i/n), alpha=0.4)
 
-        # Remove all the axis clutter, leaving just the curve.
-        
-        
+        elapsedODE = eODE - sODE 
+        print("Elapsed ODE: ", elapsedODE, " s") # prints comp. time
+        # Remove all axis, just graph
         ax.set_axis_off()
         plt.savefig('myLorenz.png', dpi=DPI)
         plt.show()      
         
-    # Runge-Kutta 4th order =============================================================================================================
+    # Euler Method ======================================================================================================================
 
     def L4rk(self,x,y,z, sigma, beta, rho):
         dotX = sigma * (y - x)      # x' = sigma*(y-x)
@@ -61,14 +61,17 @@ class LorenzAttractor:
         ze = np.empty((N+1,))
 
         xe[0], ye[0], ze[0] = (0.1,0.1,0.1)
-
         
+        sE = time.time()
         for i in range(N):
           x_dot, y_dot, z_dot = self.L4rk(xe[i], ye[i], ze[i],sigma, beta, rho)
           xe[i+1] = xe[i] + (x_dot*h)
           ye[i+1] = ye[i] + (y_dot*h)
           ze[i+1] = ze[i] + (z_dot*h)
-
+        eE = time.time()    
+        elapsedE = eE - sE
+        print("Elapsed EULER: ", elapsedE, " s") # prints comp. time
+        
         fig = plt.figure()
         ax = fig.gca(projection = '3d')
 
@@ -81,7 +84,7 @@ class LorenzAttractor:
         plt.show()
         # 'https://www.youtube.com/watch?v=kAvJRF9BeiA'
 
-    # Euler Method ======================================================================================================================
+    # Runge-Kutta 4th order =============================================================================================================
             
     def RK4(self, N,h, sigma, beta,rho):
         xrk4 = np.empty((N+1,)) # prealojamos
@@ -89,7 +92,7 @@ class LorenzAttractor:
         zrk4 = np.empty((N+1,))
 
         xrk4[0], yrk4[0], zrk4[0] = (0.1,0.1,0.1)
-
+        sRK4 = time.time()
         for i in range(N):
           x_dot, y_dot, z_dot = self.L4rk(xrk4[i],  yrk4[i], zrk4[i],sigma, beta, rho)
          
@@ -110,6 +113,9 @@ class LorenzAttractor:
           k33 = z_dot + 0.5*h*k23
           k43 = z_dot +h*k33
           zrk4[i+1] = zrk4[i] + (h/6)*(k13 + 2*k23 + 2*k33 + k43)
+        eRK4 = time.time()
+        elapsedRK4 = eRK4 - sRK4
+        print("Elapsed RK4: ", elapsedRK4, " s") #prints comp. time
 
         fig = plt.figure()
         ax = fig.gca(projection = '3d')
@@ -135,25 +141,25 @@ def main():
     WIDTH, HEIGHT, DPI = 1000, 750, 360
       
     la = LorenzAttractor()
-    sODE = time.time()
+    #sODE = time.time()
     la.OdeLorenz(x0,y0,z0, tmax,n, sigma, beta, rho,WIDTH, HEIGHT, DPI)
-    eODE = time.time()
+    #eODE = time.time()
 
-    sE = time.time()
+    #sE = time.time()
     la.Euler(h,N,sigma, beta, rho)
-    eE = time.time()
+    #eE = time.time()
 
-    sRK4 = time.time()
+    #sRK4 = time.time()
     la.RK4(N,h, sigma, beta,rho)
-    eRK4 = time.time()
+    #eRK4 = time.time()
 
-    elapsedODE = eODE - sODE 
-    elapsedE = eE - sE 
-    elapsedRK4 = eRK4 - sRK4
+    #elapsedODE = eODE - sODE 
+    #elapsedE = eE - sE 
+    #elapsedRK4 = eRK4 - sRK4
   
-    print("Elapsed ODE: ", elapsedODE, " s")
-    print("Elapsed EULER: ", elapsedE, " s")
-    print("Elapsed RK4: ", elapsedRK4, " s")
+    #print("Elapsed ODE: ", elapsedODE, " s")
+    #print("Elapsed EULER: ", elapsedE, " s")
+    #print("Elapsed RK4: ", elapsedRK4, " s")
 
 if __name__ == "__main__":
     main()
